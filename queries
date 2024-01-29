@@ -1,0 +1,52 @@
+% Question 3
+SELECT COUNT(*) AS total_trips
+ FROM green_taxi_data
+ WHERE DATE(lpep_pickup_datetime) = '2019-09-18'
+   AND DATE(lpep_dropoff_datetime) = '2019-09-18';
+
+
+% Question 4
+SELECT 
+    DATE(lpep_pickup_datetime) as "day",
+    SUM(trip_distance) AS total_distance 
+FROM
+    green_taxi_data
+GROUP BY
+    DATE(lpep_pickup_datetime)
+ORDER BY total_distance DESC;
+
+
+% Question 5
+SELECT 
+    z."Borough" as "Borough",
+    SUM(total_amount) AS total 
+FROM
+    green_taxi_data t JOIN zones z
+        ON t."PULocationID" = z."LocationID"
+WHERE DATE(lpep_pickup_datetime) = '2019-09-18'    
+GROUP BY
+    z."Borough"
+ORDER BY total DESC;
+
+% Question 6
+SELECT 
+    zdo."Zone" as "Drop off Zone",
+    zpu."Zone" as "Pick up Zone",
+    MAX(tip_amount) AS max_tip 
+FROM
+    green_taxi_data t JOIN zones zpu
+        ON t."PULocationID" = zpu."LocationID"
+    JOIN zones zdo
+        ON t."DOLocationID" = zdo."LocationID"        
+WHERE 
+    DATE(t.lpep_pickup_datetime) BETWEEN '2019-09-01' AND '2019-09-30'
+    AND zpu."Zone" LIKE 'Astoria'
+
+GROUP BY
+    zdo."Zone",
+    zpu."Zone"
+ORDER BY max_tip DESC;
+
+
+
+
